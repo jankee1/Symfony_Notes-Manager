@@ -12,15 +12,22 @@ class NotesController extends AbstractController
     #[Route('/notes_list/{noteId?}', name: 'notes_list', methods:['GET'])]
     public function notes_list($noteId): Response
     {
-        $note = [
-          'title' => 'this is title',
-          'description' => 'this is description',
-          'date' => 'this is date',
-        ];
+        // $note = [
+        //   'title' => 'this is title',
+        //   'description' => 'this is description',
+        //   'date' => 'this is date',
+        // ];
+
+        $notes = new Notes();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($notes);
+
+        $retreivedNotes = $em->getRepository(Notes::class)->findAll();
+
         return $this->render('notes/index.html.twig', [
             'controller_name' => 'NotesController',
             'noteId' => $noteId,
-            'note' => $note
+            'note' => dd($retreivedNotes)
         ]);
     }
 }
