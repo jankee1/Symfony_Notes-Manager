@@ -8,14 +8,28 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-    <p>This is note nr. {{ noteId }}</p>
-
-    {% for n in note %}
-      <p><b>Title:</b> {{ n.title }}</p>
-      <p><b>Description:</b> {{ n.description }}</p>
-      <p><b>Date:</b> {{ n.date | date("d/m/Y") }}</p>
-    {% endfor %}
+<div class="row">
+  <div class="w-50 mx-auto">
+      <h1>Hello {{ controller_name }}! ✅</h1>
+      <p>This is note nr. {{ noteId }}</p>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Date</th>
+            <th scope="col">Action</th>
+        </tr>
+      </thead>
+      {% for n in note %}
+        <tr>
+          <td>{{ n.title }}</td>
+          <td>{{ n.description }}</td>
+          <td>{{ n.date | date("d/m/Y") }}</td>
+          <td> <a href="#" class="btn btn-primary">Edit</a> <a href="#" class="btn btn-danger">Delete</a> </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
 </div>
 {% endblock %}
