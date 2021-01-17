@@ -27,7 +27,7 @@ class NotesController extends AbstractController
         return $this->render('notes/index.html.twig', [
             'controller_name' => 'NotesController',
             'noteId' => $noteId,
-            'note' => dd($retreivedNotes)
+            'note' => $retreivedNotes
         ]);
     }
 }
