@@ -11,10 +11,10 @@
 <div class="row">
   <div class="w-50 mx-auto">
       <h1>Hello {{ controller_name }}! ✅</h1>
-      <p>This is note nr. {{ noteId }}</p>
     <table class="table table-striped">
       <thead>
         <tr>
+            <th scope="col">Id</th>
             <th scope="col">Title</th>
             <th scope="col">Description</th>
             <th scope="col">Date</th>
@@ -23,10 +23,11 @@
       </thead>
       {% for n in note %}
         <tr>
+          <td>{{ n.id }}</td>
           <td>{{ n.title }}</td>
           <td>{{ n.description }}</td>
           <td>{{ n.date | date("d/m/Y") }}</td>
-          <td> <a href="#" class="btn btn-primary">Edit</a> <a href="#" class="btn btn-danger">Delete</a> </td>
+          <td> <a href="{{ path('notes.edit_note', {noteId: n.id}) }}" class="btn btn-primary">Edit</a> <a href="{{ path('notes.delete_note', {noteId: n.id}) }}" class="btn btn-danger">Delete</a> </td>
         </tr>
       {% endfor %}
     </table>
