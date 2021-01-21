@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Notes;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
@@ -51,9 +51,10 @@ class NotesController extends AbstractController
             'value' => $selectedNote->getDescription()
           ]
         ])
-        ->add('date',DateTimeType::class, [
+        ->add('date',DateType::class, [
+          'widget' => 'single_text',
           'attr' => [
-            'datetime' => $selectedNote->getDate()->format('d/m/Y')
+            'datetime' => $selectedNote->getDate()->format('d/m/Y'),
           ]
         ])
         ->add('save', SubmitType::class, [
@@ -65,13 +66,22 @@ class NotesController extends AbstractController
       return $this->render('notes/edit_note.html.twig', [
           'parameter' => $noteId,
           'note' => $selectedNote,
-          'form' => $form->createView()
+          'note_edit_form' => $form->createView()
       ]);
     }
 
     #[Route('/delete/{noteId?}', name: "delete_note")]
     public function delete_note($noteId)
     {
+      $notes = new Notes();
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($notes);
+
+      $selectedNote = $em->getRepository(Notes::class)->findOneBy([
+        'id' => $noteId
+      ]);
+
+      dd($selectedNote);
       return $this->render('notes/delete_note.html.twig', [
           'parameter' => $noteId,
       ]);
