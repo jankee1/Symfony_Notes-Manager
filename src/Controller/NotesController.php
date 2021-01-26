@@ -29,6 +29,7 @@ class NotesController extends AbstractController
             'note' => $retreivedNotes
         ]);
     }
+
     #[Route('/edit/{noteId?}', name: "edit_note")]
     public function edit_note($noteId)
     {
@@ -78,7 +79,6 @@ class NotesController extends AbstractController
       $noteToDelete = $em->getRepository(Notes::class)->find($noteId);
       $em->remove($noteToDelete);
       $em->flush();
-
 
       return $this->redirectToRoute('notes.list');
     }
