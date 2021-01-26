@@ -80,8 +80,6 @@ class NotesController extends AbstractController
       $em->flush();
 
 
-      return $this->render('notes/delete_note.html.twig', [
-          'parameter' => $noteId,
-      ]);
+      return $this->redirectToRoute('notes.list');
     }
 }
