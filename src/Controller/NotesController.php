@@ -73,15 +73,13 @@ class NotesController extends AbstractController
     #[Route('/delete/{noteId?}', name: "delete_note")]
     public function delete_note($noteId)
     {
-      $notes = new Notes();
       $em = $this->getDoctrine()->getManager();
-      $em->persist($notes);
 
-      $selectedNote = $em->getRepository(Notes::class)->findOneBy([
-        'id' => $noteId
-      ]);
+      $noteToDelete = $em->getRepository(Notes::class)->find($noteId);
+      $em->remove($noteToDelete);
+      $em->flush();
 
-      dd($selectedNote);
+
       return $this->render('notes/delete_note.html.twig', [
           'parameter' => $noteId,
       ]);
