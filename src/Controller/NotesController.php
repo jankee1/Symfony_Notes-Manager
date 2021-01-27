@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Notes;
+use App\Form\NoteType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -31,38 +33,20 @@ class NotesController extends AbstractController
     }
 
     #[Route('/edit/{noteId?}', name: "edit_note")]
-    public function edit_note($noteId)
+    public function edit_note(Request $request, $noteId)
     {
-      $notes = new Notes();
       $em = $this->getDoctrine()->getManager();
-      $em->persist($notes);
+      // $em->persist($notes);
 
       $selectedNote = $em->getRepository(Notes::class)->findOneBy([
         'id' => $noteId
       ]);
 
-      $form = $this->createFormBuilder($selectedNote)
-        ->add('title', TextType::class, [
-          'attr' => [
-            'value' => $selectedNote->getTitle()
-          ]
-        ])
-        ->add('description',TextareaType::class, [
-          'attr' => [
-            'value' => $selectedNote->getDescription()
-          ]
-        ])
-        ->add('date',DateType::class, [
-          'widget' => 'single_text',
-          'attr' => [
-            'datetime' => $selectedNote->getDate()->format('d/m/Y'),
-          ]
-        ])
-        ->add('save', SubmitType::class, [
-          'label' => 'Save'
-        ])
-        ->getForm()
-      ;
+      $form = $this->createForm(NoteType::class, $selectedNote, [
+        'action' => $this->generateUrl('notes.edit_note')
+      ]);
+
+      $form->handleRequest($request);
 
       return $this->render('notes/edit_note.html.twig', [
           'parameter' => $noteId,
