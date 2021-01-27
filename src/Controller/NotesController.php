@@ -14,11 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-#[Route('/notes_list', name: 'notes.')]
+#[Route('/notes', name: 'notes.')]
 class NotesController extends AbstractController
 {
-    #[Route('/', name: 'list', methods:['GET'])]
-    public function notes_list(): Response
+    #[Route('/', name: 'show_notes', methods:['GET'])]
+    public function show_notes(): Response
     {
         $notes = new Notes();
         $em = $this->getDoctrine()->getManager();
@@ -26,10 +26,20 @@ class NotesController extends AbstractController
 
         $retreivedNotes = $em->getRepository(Notes::class)->findAll();
 
-        return $this->render('notes/notes_list.html.twig', [
+        return $this->render('notes/show_notes.html.twig', [
             'controller_name' => 'NotesController',
             'note' => $retreivedNotes
         ]);
+    }
+
+    #[Route('/create', name: 'create_note', methods:['POST', 'GET'])]
+    public function create_note()
+    {
+      $form = $this->createForm(NoteType::class);
+
+      return $this->render('notes/create_note.html.twig', [
+          'create_note_form' => $form->createView()
+      ]);
     }
 
     #[Route('/edit/{noteId?}', name: "edit_note")]

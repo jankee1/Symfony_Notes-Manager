@@ -6,6 +6,7 @@ use App\Entity\Notes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class NoteType extends AbstractType
 {
@@ -15,6 +16,11 @@ class NoteType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('date')
+            ->add('save', SubmitType::class, [
+              'attr' => [
+                'class' => 'btn btn-success float-right'
+              ]
+            ])
         ;
     }
 
