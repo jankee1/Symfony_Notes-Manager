@@ -33,9 +33,21 @@ class NotesController extends AbstractController
     }
 
     #[Route('/create', name: 'create_note', methods:['POST', 'GET'])]
-    public function create_note()
+    public function create_note(Request $request)
     {
-      $form = $this->createForm(NoteType::class);
+      $newNote = new Notes();
+
+      $form = $this->createForm(NoteType::class, $newNote);
+
+      if($request->isMethod('POST')) {
+          $form->handleRequest($request);
+          if($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newNote);
+            $em->flush();
+            return $this->redirectToRoute('notes.show_notes');
+          }
+      }
 
       return $this->render('notes/create_note.html.twig', [
           'create_note_form' => $form->createView()
@@ -45,6 +57,9 @@ class NotesController extends AbstractController
     #[Route('/edit/{noteId?}', name: "edit_note")]
     public function edit_note(Request $request, $noteId)
     {
+      if(!isset($noteId) || !is_numeric($noteId))
+        return $this->redirectToRoute('notes.show_notes');
+
       $em = $this->getDoctrine()->getManager();
       // $em->persist($notes);
 
@@ -74,6 +89,6 @@ class NotesController extends AbstractController
       $em->remove($noteToDelete);
       $em->flush();
 
-      return $this->redirectToRoute('notes.list');
+      return $this->redirectToRoute('notes.show_notes');
     }
 }
