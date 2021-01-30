@@ -9,7 +9,7 @@ use App\Entity\Users;
 
 class UsersController extends AbstractController
 {
-    #[Route('/', name: 'users')]
+    #[Route('/sd', name: 'users')]
     public function index(): Response
     {
         return $this->render('users/index.html.twig', [
